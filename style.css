@@ -790,3 +790,67 @@ body::before {
         padding-top: 34px;
     }
 }
+
+
+/* =========================
+   v0.5.4 — true full-screen iOS fixed canvas
+   Do not combine inset: 0 with an explicit 100dvh height.
+   Let top + bottom determine the complete fixed height.
+   ========================= */
+@media (max-width: 720px) {
+    html {
+        width: 100%;
+        height: 100%;
+        min-height: 100%;
+    }
+
+    body {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+
+        width: auto !important;
+        height: auto !important;
+        min-height: 0 !important;
+
+        overflow: hidden;
+        background: transparent !important;
+    }
+
+    body::before {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+
+        width: auto !important;
+        height: auto !important;
+        min-height: 0 !important;
+
+        background-image:
+            linear-gradient(
+                rgba(255, 250, 230, .03),
+                rgba(255, 250, 230, .03)
+            ),
+            url("assets/garden-mobile.png");
+
+        background-size: cover;
+        background-position: center center;
+        background-repeat: no-repeat;
+    }
+
+    .page {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+
+        width: auto !important;
+        height: auto !important;
+        min-height: 0 !important;
+    }
+}
