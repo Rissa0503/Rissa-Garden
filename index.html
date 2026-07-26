@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Rissa's Garden</title>
+    <meta name="theme-color" content="#dbe7a9">
+    <meta name="application-name" content="Rissa's Garden">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Rissa's Garden">
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Start -->
+    <main id="startPage" class="page start-page">
+        <div class="start-content">
+            <h1>Rissa's Garden</h1>
+            <button id="startButton" class="main-button" type="button">START</button>
+        </div>
+    </main>
+
+    <!-- Home -->
+    <main id="homePage" class="page home-page hidden">
+        <button id="backToStartButton" class="back-button" type="button" aria-label="Back to start page">←</button>
+        <div class="home-content">
+            <h2>Welcome Home</h2>
+            <p class="subtitle">What would you like to explore today?</p>
+            <div class="home-buttons">
+                <button id="experienceButton" class="menu-button" type="button">
+                    <span class="button-icon">🌱</span>
+                    <span>Experience</span>
+                </button>
+                <button id="modeButton" class="menu-button" type="button">
+                    <span class="button-icon">🌼</span>
+                    <span>Mode</span>
+                </button>
+            </div>
+
+            <div class="home-utilities" aria-label="Save tools">
+                <button id="exportSaveButton" class="utility-button" type="button">
+                    <span>Export Save</span>
+                    <small>Download a JSON backup</small>
+                </button>
+                <button id="importSaveButton" class="utility-button" type="button">
+                    <span>Import Save</span>
+                    <small>Restore a JSON backup</small>
+                </button>
+                <input
+                    id="importSaveInput"
+                    type="file"
+                    accept=".json,application/json"
+                    hidden
+                >
+            </div>
+        </div>
+    </main>
+
+    <!-- Experience -->
+    <main id="experiencePage" class="page experience-page hidden">
+        <button id="backToHomeFromExperience" class="back-button" type="button" aria-label="Back to home page">←</button>
+        <section class="experience-panel">
+            <header class="experience-header">
+                <p class="panel-label">Growth Record</p>
+                <h2>Experience</h2>
+                <p>Every small effort leaves evidence.</p>
+            </header>
+
+            <section class="overall-card" aria-label="Overall level">
+                <div>
+                    <p class="overall-label">Overall Level</p>
+                    <strong id="overallLevel">Lv. 1</strong>
+                </div>
+                <div class="overall-progress">
+                    <div class="xp-track">
+                        <div id="overallXPFill" class="xp-fill" style="width: 0%;"></div>
+                    </div>
+                    <p id="overallXPText" class="xp-text">0 / 100 XP</p>
+                </div>
+            </section>
+
+            <div class="skill-list">
+                <button id="mlSkillCard" class="skill-card clickable-card" type="button">
+                    <div class="skill-heading"><span>🌱 ML</span><strong id="mlLevel">Lv. 1</strong></div>
+                    <div class="xp-track"><div id="mlXPFill" class="xp-fill" style="width: 0%;"></div></div>
+                    <p id="mlXPText" class="xp-text">0 / 100 XP</p>
+                </button>
+
+                <button id="researchSkillCard" class="skill-card clickable-card" type="button">
+                    <div class="skill-heading"><span>🔎 Research</span><strong id="researchLevel">Lv. 1</strong></div>
+                    <div class="xp-track"><div id="researchXPFill" class="xp-fill" style="width: 0%;"></div></div>
+                    <p id="researchXPText" class="xp-text">0 / 100 XP</p>
+                </button>
+
+                <button id="englishSkillCard" class="skill-card clickable-card" type="button">
+                    <div class="skill-heading"><span>🕊️ English</span><strong id="englishLevel">Lv. 1</strong></div>
+                    <div class="xp-track"><div id="englishXPFill" class="xp-fill" style="width: 0%;"></div></div>
+                    <p id="englishXPText" class="xp-text">0 / 100 XP</p>
+                </button>
+
+                <button id="lifeSkillCard" class="skill-card clickable-card" type="button">
+                    <div class="skill-heading"><span>🌼 Life</span><strong id="lifeLevel">Lv. 1</strong></div>
+                    <div class="xp-track"><div id="lifeXPFill" class="xp-fill" style="width: 0%;"></div></div>
+                    <p id="lifeXPText" class="xp-text">0 / 100 XP</p>
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- ML Detail -->
+    <main id="mlDetailPage" class="page detail-page hidden">
+        <button class="back-button detail-back-button" type="button" aria-label="Back to experience page">←</button>
+        <section class="detail-panel">
+            <header class="detail-header">
+                <p class="panel-label">Skill Detail</p>
+                <h2>🌱 ML</h2>
+                <strong id="mlDetailLevel" class="detail-level">Lv. 1</strong>
+            </header>
+            <div class="detail-xp-block">
+                <div class="xp-track"><div id="mlDetailXPFill" class="xp-fill" style="width: 0%;"></div></div>
+                <p id="mlDetailXPText" class="xp-text">0 / 100 XP</p>
+            </div>
+            <div class="metric-grid">
+                <article class="metric-box"><span>Learning Input</span><strong id="mlInputMinutes">0</strong><small>minutes</small></article>
+                <article class="metric-box"><span>Notes</span><strong id="mlNoteWords">0</strong><small>words</small></article>
+                <article class="metric-box"><span>Questions / Ideas</span><strong id="mlQuestions">0</strong><small>entries</small></article>
+            </div>
+        </section>
+    </main>
+
+    <!-- Research Detail -->
+    <main id="researchDetailPage" class="page detail-page hidden">
+        <button class="back-button detail-back-button" type="button" aria-label="Back to experience page">←</button>
+        <section class="detail-panel">
+            <header class="detail-header">
+                <p class="panel-label">Skill Detail</p>
+                <h2>🔎 Research</h2>
+                <strong id="researchDetailLevel" class="detail-level">Lv. 1</strong>
+            </header>
+            <div class="detail-xp-block">
+                <div class="xp-track"><div id="researchDetailXPFill" class="xp-fill" style="width: 0%;"></div></div>
+                <p id="researchDetailXPText" class="xp-text">0 / 100 XP</p>
+            </div>
+            <div class="metric-grid two-columns">
+                <article class="metric-box"><span>Paper Reading</span><strong id="researchReadingMinutes">0</strong><small>minutes</small></article>
+                <article class="metric-box"><span>Research Output</span><strong id="researchOutputWords">0</strong><small>words</small></article>
+            </div>
+        </section>
+    </main>
+
+    <!-- English Detail -->
+    <main id="englishDetailPage" class="page detail-page hidden">
+        <button class="back-button detail-back-button" type="button" aria-label="Back to experience page">←</button>
+        <section class="detail-panel compact-detail-panel">
+            <header class="detail-header">
+                <p class="panel-label">Skill Detail</p>
+                <h2>🕊️ English</h2>
+                <strong id="englishDetailLevel" class="detail-level">Lv. 1</strong>
+            </header>
+            <div class="detail-xp-block">
+                <div class="xp-track"><div id="englishDetailXPFill" class="xp-fill" style="width: 0%;"></div></div>
+                <p id="englishDetailXPText" class="xp-text">0 / 100 XP</p>
+            </div>
+            <div class="metric-grid one-column">
+                <article class="metric-box"><span>RS Sentences</span><strong id="englishSentences">0</strong><small>sentences</small></article>
+            </div>
+        </section>
+    </main>
+
+    <!-- Life Detail -->
+    <main id="lifeDetailPage" class="page detail-page hidden">
+        <button class="back-button detail-back-button" type="button" aria-label="Back to experience page">←</button>
+        <section class="detail-panel">
+            <header class="detail-header">
+                <p class="panel-label">Skill Detail</p>
+                <h2>🌼 Life</h2>
+                <strong id="lifeDetailLevel" class="detail-level">Lv. 1</strong>
+            </header>
+            <div class="detail-xp-block">
+                <div class="xp-track"><div id="lifeDetailXPFill" class="xp-fill" style="width: 0%;"></div></div>
+                <p id="lifeDetailXPText" class="xp-text">0 / 100 XP</p>
+            </div>
+            <div class="metric-grid">
+                <article class="metric-box"><span>Drawing</span><strong id="lifeArtMinutes">0</strong><small>minutes</small></article>
+                <article class="metric-box"><span>Exercise</span><strong id="lifeExerciseMinutes">0</strong><small>minutes</small></article>
+                <article class="metric-box"><span>Small Joys</span><strong id="lifeHappyEvents">0</strong><small>moments</small></article>
+            </div>
+        </section>
+    </main>
+
+    <!-- Mode Menu -->
+    <main id="modePage" class="page mode-page hidden">
+        <button id="backToHomeFromMode" class="back-button" type="button" aria-label="Back to home page">←</button>
+
+        <div class="date-control floating-date-control">
+            <label for="modeDate">Record Date</label>
+            <input id="modeDate" class="shared-date-input" type="date">
+        </div>
+
+        <section class="mode-panel">
+            <header class="mode-header">
+                <p class="panel-label">Choose Your Path</p>
+                <h2>Mode</h2>
+                <p>Where will you grow today?</p>
+            </header>
+
+            <div class="mode-grid">
+                <button id="mlModeCard" class="mode-card" type="button">
+                    <span class="mode-icon">🌱</span>
+                    <strong>ML</strong>
+                    <small>Follow the thread.</small>
+                </button>
+                <button id="researchModeCard" class="mode-card" type="button">
+                    <span class="mode-icon">🔎</span>
+                    <strong>Research</strong>
+                    <small>Look closer.</small>
+                </button>
+                <button id="englishModeCard" class="mode-card" type="button">
+                    <span class="mode-icon">🕊️</span>
+                    <strong>English</strong>
+                    <small>Find your voice.</small>
+                </button>
+                <button id="lifeModeCard" class="mode-card" type="button">
+                    <span class="mode-icon">🌼</span>
+                    <strong>Life</strong>
+                    <small>Make it worth remembering.</small>
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- ML Mode -->
+    <main id="mlModePage" class="page mode-detail-page hidden">
+        <button class="back-button mode-detail-back-button" type="button" aria-label="Back to mode page">←</button>
+        <div class="date-control floating-date-control">
+            <label for="mlModeDate">Record Date</label>
+            <input id="mlModeDate" class="shared-date-input" type="date">
+        </div>
+
+        <section class="entry-panel">
+            <header class="entry-header">
+                <p class="panel-label">Follow the Thread</p>
+                <h2>🌱 ML</h2>
+                <p>What did you uncover today?</p>
+            </header>
+
+            <div class="entry-form">
+                <label class="input-group">
+                    <span>Learning Input</span>
+                    <div class="input-with-unit"><input id="mlInputMinutesField" type="number" min="0" step="1" value="0"><small>minutes</small></div>
+                </label>
+                <label class="input-group">
+                    <span>Notes</span>
+                    <div class="input-with-unit"><input id="mlNoteWordsField" type="number" min="0" step="1" value="0"><small>words</small></div>
+                </label>
+
+                <div class="counter-group">
+                    <span>Questions / Ideas</span>
+                    <div class="counter-control">
+                        <button class="counter-button" id="mlQuestionMinus" type="button">−</button>
+                        <strong id="mlQuestionCount">0</strong>
+                        <button class="counter-button" id="mlQuestionPlus" type="button">＋</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="xp-preview"><span>Estimated XP</span><strong id="mlXPPreview">0 XP</strong></div>
+            <button id="reviewMLButton" class="record-button" type="button">Review Entry</button>
+        </section>
+    </main>
+
+    <!-- Research Mode -->
+    <main id="researchModePage" class="page mode-detail-page hidden">
+        <button class="back-button mode-detail-back-button" type="button" aria-label="Back to mode page">←</button>
+        <div class="date-control floating-date-control">
+            <label for="researchModeDate">Record Date</label>
+            <input id="researchModeDate" class="shared-date-input" type="date">
+        </div>
+
+        <section class="entry-panel">
+            <header class="entry-header">
+                <p class="panel-label">Look Closer</p>
+                <h2>🔎 Research</h2>
+                <p>Every answer begins with a better question.</p>
+            </header>
+
+            <div class="entry-form two-entry-columns">
+                <label class="input-group">
+                    <span>Paper Reading</span>
+                    <div class="input-with-unit"><input id="researchReadingMinutesField" type="number" min="0" step="1" value="0"><small>minutes</small></div>
+                </label>
+                <label class="input-group">
+                    <span>Research Output</span>
+                    <div class="input-with-unit"><input id="researchOutputWordsField" type="number" min="0" step="1" value="0"><small>words</small></div>
+                </label>
+            </div>
+
+            <div class="xp-preview"><span>Estimated XP</span><strong id="researchXPPreview">0 XP</strong></div>
+            <button id="reviewResearchButton" class="record-button" type="button">Review Entry</button>
+        </section>
+    </main>
+
+    <!-- English Mode -->
+    <main id="englishModePage" class="page mode-detail-page hidden">
+        <button class="back-button mode-detail-back-button" type="button" aria-label="Back to mode page">←</button>
+        <div class="date-control floating-date-control">
+            <label for="englishModeDate">Record Date</label>
+            <input id="englishModeDate" class="shared-date-input" type="date">
+        </div>
+
+        <section class="entry-panel compact-entry-panel">
+            <header class="entry-header">
+                <p class="panel-label">Find Your Voice</p>
+                <h2>🕊️ English</h2>
+                <p>One sentence at a time.</p>
+            </header>
+
+            <div class="entry-form one-entry-column">
+                <label class="input-group">
+                    <span>RS Practice</span>
+                    <div class="input-with-unit"><input id="englishSentencesField" type="number" min="0" step="1" value="0"><small>sentences</small></div>
+                </label>
+            </div>
+
+            <div class="xp-preview"><span>Estimated XP</span><strong id="englishXPPreview">0 XP</strong></div>
+            <button id="reviewEnglishButton" class="record-button" type="button">Review Entry</button>
+        </section>
+    </main>
+
+    <!-- Life Mode -->
+    <main id="lifeModePage" class="page mode-detail-page hidden">
+        <button class="back-button mode-detail-back-button" type="button" aria-label="Back to mode page">←</button>
+        <div class="date-control floating-date-control">
+            <label for="lifeModeDate">Record Date</label>
+            <input id="lifeModeDate" class="shared-date-input" type="date">
+        </div>
+
+        <section class="entry-panel">
+            <header class="entry-header">
+                <p class="panel-label">Make It Worth Remembering</p>
+                <h2>🌼 Life</h2>
+                <p>What made today feel alive?</p>
+            </header>
+
+            <div class="entry-form">
+                <label class="input-group">
+                    <span>Drawing</span>
+                    <div class="input-with-unit"><input id="lifeArtMinutesField" type="number" min="0" step="1" value="0"><small>minutes</small></div>
+                </label>
+                <label class="input-group">
+                    <span>Exercise</span>
+                    <div class="input-with-unit"><input id="lifeExerciseMinutesField" type="number" min="0" step="1" value="0"><small>minutes</small></div>
+                </label>
+
+                <div class="counter-group">
+                    <span>Small Joys</span>
+                    <div class="counter-control">
+                        <button class="counter-button" id="lifeJoyMinus" type="button">−</button>
+                        <strong id="lifeJoyCount">0</strong>
+                        <button class="counter-button" id="lifeJoyPlus" type="button">＋</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="xp-preview"><span>Estimated XP</span><strong id="lifeXPPreview">0 XP</strong></div>
+            <button id="reviewLifeButton" class="record-button" type="button">Review Entry</button>
+        </section>
+    </main>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmationOverlay" class="confirmation-overlay hidden" aria-hidden="true">
+        <section class="confirmation-card" role="dialog" aria-modal="true" aria-labelledby="confirmationTitle">
+            <p class="panel-label">Before It Grows</p>
+            <h2 id="confirmationTitle">Leave this mark in the garden?</h2>
+            <div id="confirmationSummary" class="confirmation-summary"></div>
+            <div class="confirmation-actions">
+                <button id="cancelConfirmationButton" class="secondary-button" type="button">Go Back</button>
+                <button id="confirmEntryButton" class="record-button" type="button">Confirm</button>
+            </div>
+        </section>
+    </div>
+
+    <!-- Toast -->
+    <div id="successToast" class="success-toast hidden" role="status" aria-live="polite">
+        <strong>Your garden remembers.</strong>
+        <span id="toastXPText">+0 XP</span>
+    </div>
+
+
+    <!-- Import Confirmation -->
+    <div id="importOverlay" class="confirmation-overlay hidden" aria-hidden="true">
+        <section class="confirmation-card" role="dialog" aria-modal="true" aria-labelledby="importTitle">
+            <p class="panel-label">Restore the Garden</p>
+            <h2 id="importTitle">Replace the current save?</h2>
+            <div id="importSummary" class="confirmation-summary"></div>
+            <p class="import-warning">
+                The current browser save will be replaced. Export it first if you may need it later.
+            </p>
+            <div class="confirmation-actions">
+                <button id="cancelImportButton" class="secondary-button" type="button">Go Back</button>
+                <button id="confirmImportButton" class="record-button" type="button">Import Save</button>
+            </div>
+        </section>
+    </div>
+
+    <!-- Global Sound Toggle -->
+    <button
+        id="soundToggleButton"
+        class="sound-toggle"
+        type="button"
+        aria-label="Mute sounds"
+        title="Mute sounds"
+    >
+        🔊
+    </button>
+
+    <script src="script.js"></script>
+</body>
+</html>
