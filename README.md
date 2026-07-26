@@ -46,3 +46,37 @@ After the first successful online load, the service worker caches the applicatio
 ## Important privacy note
 
 Do **not** upload exported save JSON files to the public repository. Source code and media in a public GitHub Pages repository can be viewed by other people, but browser `localStorage` data stays on the device unless you deliberately upload or share it.
+
+
+## v0.5.1 update
+
+- Uses `black-translucent` iOS status-bar mode.
+- Locks the outer PWA shell to stop whole-page rubber-band dragging from exposing white space.
+- Keeps long content scrollable inside the glass panels.
+- Adds **Reset Save** with a second confirmation step.
+- Updates the service-worker cache to `rissa-garden-pwa-v0.5.1`.
+
+
+## v0.5.2 update
+
+- Extends `assets/garden.png` across the root `html` canvas and a fixed body background layer.
+- Removes the solid cream status-area fallback after the app has loaded.
+- Updates the theme/background fallback color to match the garden sky.
+- Updates the service-worker cache to `rissa-garden-pwa-v0.5.2`.
+
+Because iOS stores some Home Screen web-app metadata at installation time,
+remove the old Home Screen app and add it again from Safari after the new
+GitHub Pages deployment is live.
+
+
+## v0.5.3 update
+
+- Adds a dedicated portrait mobile wallpaper: `assets/garden-mobile.png`
+- Desktop still uses `assets/garden.png`
+- iPhone / narrow screens now switch automatically to the portrait background
+- Updates service-worker cache to `rissa-garden-pwa-v0.5.3`
+
+After uploading the new files to GitHub Pages:
+1. wait for deployment,
+2. open the website once in Safari,
+3. if the old background still appears, remove the Home Screen app and add it again.

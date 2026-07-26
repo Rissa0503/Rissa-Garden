@@ -754,3 +754,39 @@ body::before {
         min-height: 100dvh;
     }
 }
+
+
+/* =========================
+   v0.5.3 — dedicated mobile wallpaper
+   Desktop keeps garden.png
+   Mobile uses garden-mobile.png
+   ========================= */
+@media (max-width: 720px) {
+    html {
+        background-image:
+            linear-gradient(
+                rgba(255, 250, 230, .03),
+                rgba(255, 250, 230, .03)
+            ),
+            url("assets/garden-mobile.png");
+        background-size: cover;
+        background-position: center top;
+        background-repeat: no-repeat;
+    }
+
+    body::before {
+        background-image:
+            linear-gradient(
+                rgba(255, 250, 230, .03),
+                rgba(255, 250, 230, .03)
+            ),
+            url("assets/garden-mobile.png");
+        background-size: cover;
+        background-position: center top;
+        background-repeat: no-repeat;
+    }
+
+    .start-content {
+        padding-top: 34px;
+    }
+}

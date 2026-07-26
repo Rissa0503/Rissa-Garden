@@ -1,4 +1,4 @@
-const CACHE_NAME = "rissa-garden-pwa-v0.5.2";
+const CACHE_NAME = "rissa-garden-pwa-v0.5.3";
 
 const APP_SHELL = [
     "./",
@@ -7,6 +7,7 @@ const APP_SHELL = [
     "./script.js",
     "./manifest.webmanifest",
     "./assets/garden.png",
+    "./assets/garden-mobile.png",
     "./icons/favicon-32.png",
     "./icons/apple-touch-icon.png",
     "./icons/icon-192.png",
