@@ -422,19 +422,6 @@ button:focus-visible, input:focus-visible { outline: 3px solid rgba(153,174,104,
 }
 .success-toast span { color: #728244; font-weight: 700; }
 
-@media (max-width: 720px) {
-    body { overflow: auto; }
-    .page { position: relative; min-height: 100vh; padding: 82px 18px 24px; }
-    .start-content, .home-content, .experience-panel, .detail-panel, .mode-panel, .entry-panel { padding: 28px 22px; }
-    .home-buttons, .metric-grid, .metric-grid.two-columns, .mode-grid, .entry-form, .entry-form.two-entry-columns { grid-template-columns: 1fr; }
-    .menu-button, .mode-card { min-height: 120px; }
-    .overall-card { grid-template-columns: 1fr; gap: 12px; }
-    .back-button { top: 18px; left: 18px; }
-    .floating-date-control { top: 18px; right: 18px; }
-    .date-control label { display: none; }
-    .confirmation-actions { grid-template-columns: 1fr; }
-}
-
 
 /* =========================
    Save tools
@@ -525,91 +512,8 @@ button:focus-visible, input:focus-visible { outline: 3px solid rgba(153,174,104,
 
 
 /* =========================
-   PWA / iPhone safe areas
+   Save reset controls
    ========================= */
-:root {
-    --safe-top: env(safe-area-inset-top, 0px);
-    --safe-right: env(safe-area-inset-right, 0px);
-    --safe-bottom: env(safe-area-inset-bottom, 0px);
-    --safe-left: env(safe-area-inset-left, 0px);
-}
-
-.page {
-    padding:
-        calc(30px + var(--safe-top))
-        calc(30px + var(--safe-right))
-        calc(30px + var(--safe-bottom))
-        calc(30px + var(--safe-left));
-}
-
-.back-button {
-    top: calc(28px + var(--safe-top));
-    left: calc(30px + var(--safe-left));
-}
-
-.floating-date-control {
-    top: calc(26px + var(--safe-top));
-    right: calc(30px + var(--safe-right));
-}
-
-.sound-toggle {
-    right: calc(26px + var(--safe-right));
-    bottom: calc(24px + var(--safe-bottom));
-}
-
-.success-toast {
-    bottom: calc(28px + var(--safe-bottom));
-}
-
-@media (max-width: 720px) {
-    .page {
-        padding:
-            calc(82px + var(--safe-top))
-            calc(18px + var(--safe-right))
-            calc(24px + var(--safe-bottom))
-            calc(18px + var(--safe-left));
-    }
-
-    .back-button {
-        top: calc(18px + var(--safe-top));
-        left: calc(18px + var(--safe-left));
-    }
-
-    .floating-date-control {
-        top: calc(18px + var(--safe-top));
-        right: calc(18px + var(--safe-right));
-    }
-
-    .sound-toggle {
-        right: calc(18px + var(--safe-right));
-        bottom: calc(18px + var(--safe-bottom));
-    }
-}
-
-
-/* =========================
-   v0.5.1 — iPhone app-shell behavior
-   ========================= */
-html,
-body {
-    width: 100%;
-    height: 100%;
-    min-height: 100%;
-    overflow: hidden;
-    overscroll-behavior: none;
-    background-color: #f7f1d9;
-}
-
-body {
-    position: fixed;
-    inset: 0;
-    min-height: 0;
-}
-
-button {
-    touch-action: manipulation;
-}
-
 .reset-utility-button {
     grid-column: 1 / -1;
     align-items: center;
@@ -632,102 +536,47 @@ button {
     background: #f0dfcf;
 }
 
-@media (max-width: 720px) {
-    html,
-    body {
-        overflow: hidden;
-        overscroll-behavior: none;
-    }
-
-    body {
-        position: fixed;
-        inset: 0;
-        width: 100%;
-        height: 100dvh;
-        min-height: 0;
-    }
-
-    .page {
-        position: fixed;
-        inset: 0;
-        width: 100%;
-        height: 100dvh;
-        min-height: 100dvh;
-        overflow: hidden;
-    }
-
-    .start-content,
-    .home-content,
-    .experience-panel,
-    .detail-panel,
-    .mode-panel,
-    .entry-panel {
-        max-height:
-            calc(
-                100dvh
-                - var(--safe-top)
-                - var(--safe-bottom)
-                - 112px
-            );
-        overflow-y: auto;
-        overscroll-behavior: contain;
-        -webkit-overflow-scrolling: touch;
-        touch-action: pan-y;
-    }
-
-    .start-content {
-        overflow: hidden;
-    }
-
-    .home-content {
-        padding-bottom: 24px;
-    }
-
-    .confirmation-overlay {
-        overscroll-behavior: none;
-    }
-
-    .confirmation-card {
-        max-height:
-            calc(
-                100dvh
-                - var(--safe-top)
-                - var(--safe-bottom)
-                - 36px
-            );
-        overflow-y: auto;
-        overscroll-behavior: contain;
-        -webkit-overflow-scrolling: touch;
-    }
+/* =========================
+   One definitive PWA layout
+   ========================= */
+:root {
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-right: env(safe-area-inset-right, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-left: env(safe-area-inset-left, 0px);
 }
 
-
-/* =========================
-   v0.5.2 — full-bleed iPhone wallpaper
-   ========================= */
-html {
-    background-color: #dceac9;
-    background-image:
-        linear-gradient(
-            rgba(255, 250, 230, .03),
-            rgba(255, 250, 230, .03)
-        ),
-        url("assets/garden.png");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+html,
+body {
+    width: 100%;
+    height: 100%;
+    min-height: 100%;
+    overflow: hidden;
+    overscroll-behavior: none;
+    background: #7b6440;
 }
 
 body {
-    isolation: isolate;
-    background: transparent !important;
-}
-
-body::before {
-    content: "";
     position: fixed;
     inset: 0;
-    z-index: -1;
+    min-height: 0;
+    isolation: isolate;
+}
+
+.app-background {
+    position: fixed;
+
+    /*
+       The installed iPhone PWA may treat the Home Indicator area
+       as outside the ordinary fixed-layout viewport. Extend the
+       artwork beyond every safe-area edge instead of stopping at it.
+    */
+    top: calc(0px - var(--safe-top));
+    right: calc(0px - var(--safe-right));
+    bottom: calc(0px - var(--safe-bottom));
+    left: calc(0px - var(--safe-left));
+
+    z-index: 0;
     pointer-events: none;
 
     background-image:
@@ -745,91 +594,52 @@ body::before {
     -webkit-transform: translateZ(0);
 }
 
-@supports (height: 100dvh) {
-    html,
-    body,
-    body::before {
-        width: 100%;
-        height: 100dvh;
-        min-height: 100dvh;
-    }
+.page {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+
+    width: auto;
+    height: auto;
+    min-height: 0;
+
+    padding:
+        calc(30px + var(--safe-top))
+        calc(30px + var(--safe-right))
+        calc(30px + var(--safe-bottom))
+        calc(30px + var(--safe-left));
+
+    overflow: hidden;
 }
 
-
-/* =========================
-   v0.5.3 — dedicated mobile wallpaper
-   Desktop keeps garden.png
-   Mobile uses garden-mobile.png
-   ========================= */
-@media (max-width: 720px) {
-    html {
-        background-image:
-            linear-gradient(
-                rgba(255, 250, 230, .03),
-                rgba(255, 250, 230, .03)
-            ),
-            url("assets/garden-mobile.png");
-        background-size: cover;
-        background-position: center top;
-        background-repeat: no-repeat;
-    }
-
-    body::before {
-        background-image:
-            linear-gradient(
-                rgba(255, 250, 230, .03),
-                rgba(255, 250, 230, .03)
-            ),
-            url("assets/garden-mobile.png");
-        background-size: cover;
-        background-position: center top;
-        background-repeat: no-repeat;
-    }
-
-    .start-content {
-        padding-top: 34px;
-    }
+button {
+    touch-action: manipulation;
 }
 
+.back-button {
+    top: calc(28px + var(--safe-top));
+    left: calc(30px + var(--safe-left));
+}
+
+.floating-date-control {
+    top: calc(26px + var(--safe-top));
+    right: calc(30px + var(--safe-right));
+}
+
+.sound-toggle {
+    right: calc(26px + var(--safe-right));
+    bottom: calc(24px + var(--safe-bottom));
+}
+
+.success-toast {
+    bottom: calc(28px + var(--safe-bottom));
+}
 
 /* =========================
-   v0.5.4 — true full-screen iOS fixed canvas
-   Do not combine inset: 0 with an explicit 100dvh height.
-   Let top + bottom determine the complete fixed height.
+   Mobile layout
    ========================= */
 @media (max-width: 720px) {
-    html {
-        width: 100%;
-        height: 100%;
-        min-height: 100%;
-    }
-
-    body {
-        position: fixed;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-
-        width: auto !important;
-        height: auto !important;
-        min-height: 0 !important;
-
-        overflow: hidden;
-        background: transparent !important;
-    }
-
-    body::before {
-        position: fixed;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-
-        width: auto !important;
-        height: auto !important;
-        min-height: 0 !important;
-
+    .app-background {
         background-image:
             linear-gradient(
                 rgba(255, 250, 230, .03),
@@ -843,14 +653,101 @@ body::before {
     }
 
     .page {
-        position: fixed;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
+        padding:
+            calc(82px + var(--safe-top))
+            calc(18px + var(--safe-right))
+            calc(24px + var(--safe-bottom))
+            calc(18px + var(--safe-left));
+    }
 
-        width: auto !important;
-        height: auto !important;
-        min-height: 0 !important;
+    .start-content,
+    .home-content,
+    .experience-panel,
+    .detail-panel,
+    .mode-panel,
+    .entry-panel {
+        padding: 28px 22px;
+
+        max-height:
+            calc(
+                100%
+                - var(--safe-top)
+                - var(--safe-bottom)
+                - 88px
+            );
+
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
+        touch-action: pan-y;
+    }
+
+    .start-content {
+        overflow: hidden;
+        padding-top: 34px;
+    }
+
+    .home-buttons,
+    .metric-grid,
+    .metric-grid.two-columns,
+    .mode-grid,
+    .entry-form,
+    .entry-form.two-entry-columns {
+        grid-template-columns: 1fr;
+    }
+
+    .menu-button,
+    .mode-card {
+        min-height: 120px;
+    }
+
+    .overall-card {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .back-button {
+        top: calc(18px + var(--safe-top));
+        left: calc(18px + var(--safe-left));
+    }
+
+    .floating-date-control {
+        top: calc(18px + var(--safe-top));
+        right: calc(18px + var(--safe-right));
+    }
+
+    .date-control label {
+        display: none;
+    }
+
+    .confirmation-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .home-utilities {
+        grid-template-columns: 1fr;
+    }
+
+    .sound-toggle {
+        right: calc(18px + var(--safe-right));
+        bottom: calc(18px + var(--safe-bottom));
+    }
+
+    .confirmation-overlay {
+        overscroll-behavior: none;
+    }
+
+    .confirmation-card {
+        max-height:
+            calc(
+                100%
+                - var(--safe-top)
+                - var(--safe-bottom)
+                - 36px
+            );
+
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
     }
 }
