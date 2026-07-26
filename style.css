@@ -537,7 +537,7 @@ button:focus-visible, input:focus-visible { outline: 3px solid rgba(153,174,104,
 }
 
 /* =========================
-   One definitive PWA layout
+   v0.5.6 — stable iPhone PWA layout
    ========================= */
 :root {
     --safe-top: env(safe-area-inset-top, 0px);
@@ -551,9 +551,10 @@ body {
     width: 100%;
     height: 100%;
     min-height: 100%;
+    margin: 0;
     overflow: hidden;
     overscroll-behavior: none;
-    background: #7b6440;
+    background: #76603d;
 }
 
 body {
@@ -565,17 +566,7 @@ body {
 
 .app-background {
     position: fixed;
-
-    /*
-       The installed iPhone PWA may treat the Home Indicator area
-       as outside the ordinary fixed-layout viewport. Extend the
-       artwork beyond every safe-area edge instead of stopping at it.
-    */
-    top: calc(0px - var(--safe-top));
-    right: calc(0px - var(--safe-right));
-    bottom: calc(0px - var(--safe-bottom));
-    left: calc(0px - var(--safe-left));
-
+    inset: 0;
     z-index: 0;
     pointer-events: none;
 
@@ -589,9 +580,6 @@ body {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-
-    transform: translateZ(0);
-    -webkit-transform: translateZ(0);
 }
 
 .page {
@@ -628,11 +616,11 @@ button {
 
 .sound-toggle {
     right: calc(26px + var(--safe-right));
-    bottom: calc(24px + var(--safe-bottom));
+    bottom: calc(18px + var(--safe-bottom));
 }
 
 .success-toast {
-    bottom: calc(28px + var(--safe-bottom));
+    bottom: calc(22px + var(--safe-bottom));
 }
 
 /* =========================
@@ -654,27 +642,26 @@ button {
 
     .page {
         padding:
-            calc(82px + var(--safe-top))
+            calc(72px + var(--safe-top))
             calc(18px + var(--safe-right))
-            calc(24px + var(--safe-bottom))
+            calc(14px + var(--safe-bottom))
             calc(18px + var(--safe-left));
     }
 
+    /*
+       The page content box already excludes the outer padding.
+       max-height: 100% therefore uses the full available area
+       instead of subtracting the safe areas a second time.
+    */
     .start-content,
     .home-content,
     .experience-panel,
     .detail-panel,
     .mode-panel,
     .entry-panel {
+        width: min(100%, 760px);
+        max-height: 100%;
         padding: 28px 22px;
-
-        max-height:
-            calc(
-                100%
-                - var(--safe-top)
-                - var(--safe-bottom)
-                - 88px
-            );
 
         overflow-y: auto;
         overscroll-behavior: contain;
@@ -683,8 +670,14 @@ button {
     }
 
     .start-content {
+        width: min(92%, 620px);
         overflow: hidden;
         padding-top: 34px;
+        padding-bottom: 34px;
+    }
+
+    .home-content {
+        width: min(100%, 620px);
     }
 
     .home-buttons,
@@ -707,12 +700,12 @@ button {
     }
 
     .back-button {
-        top: calc(18px + var(--safe-top));
+        top: calc(16px + var(--safe-top));
         left: calc(18px + var(--safe-left));
     }
 
     .floating-date-control {
-        top: calc(18px + var(--safe-top));
+        top: calc(16px + var(--safe-top));
         right: calc(18px + var(--safe-right));
     }
 
@@ -729,23 +722,21 @@ button {
     }
 
     .sound-toggle {
-        right: calc(18px + var(--safe-right));
-        bottom: calc(18px + var(--safe-bottom));
+        right: calc(16px + var(--safe-right));
+        bottom: calc(10px + var(--safe-bottom));
     }
 
     .confirmation-overlay {
+        padding:
+            calc(16px + var(--safe-top))
+            calc(16px + var(--safe-right))
+            calc(16px + var(--safe-bottom))
+            calc(16px + var(--safe-left));
         overscroll-behavior: none;
     }
 
     .confirmation-card {
-        max-height:
-            calc(
-                100%
-                - var(--safe-top)
-                - var(--safe-bottom)
-                - 36px
-            );
-
+        max-height: 100%;
         overflow-y: auto;
         overscroll-behavior: contain;
         -webkit-overflow-scrolling: touch;
