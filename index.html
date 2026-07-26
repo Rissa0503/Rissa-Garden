@@ -7,7 +7,7 @@
     <meta name="theme-color" content="#dbe7a9">
     <meta name="application-name" content="Rissa's Garden">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Rissa's Garden">
     <link rel="manifest" href="manifest.webmanifest">
     <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
@@ -48,6 +48,10 @@
                 <button id="importSaveButton" class="utility-button" type="button">
                     <span>Import Save</span>
                     <small>Restore a JSON backup</small>
+                </button>
+                <button id="resetSaveButton" class="utility-button reset-utility-button" type="button">
+                    <span>Reset Save</span>
+                    <small>Erase all XP and records</small>
                 </button>
                 <input
                     id="importSaveInput"
@@ -402,6 +406,31 @@
             <div class="confirmation-actions">
                 <button id="cancelImportButton" class="secondary-button" type="button">Go Back</button>
                 <button id="confirmImportButton" class="record-button" type="button">Import Save</button>
+            </div>
+        </section>
+    </div>
+
+    <!-- Reset Confirmation -->
+    <div id="resetOverlay" class="confirmation-overlay hidden" aria-hidden="true">
+        <section class="confirmation-card" role="dialog" aria-modal="true" aria-labelledby="resetTitle">
+            <p class="panel-label">Begin Again</p>
+            <h2 id="resetTitle">Reset the entire garden?</h2>
+            <div class="confirmation-summary">
+                <div class="confirmation-row">
+                    <span>This will erase</span>
+                    <strong>XP, totals and dated logs</strong>
+                </div>
+                <div class="confirmation-row">
+                    <span>Sound preference</span>
+                    <strong>Will be kept</strong>
+                </div>
+            </div>
+            <p class="import-warning">
+                This cannot be undone unless you exported a JSON backup first.
+            </p>
+            <div class="confirmation-actions">
+                <button id="cancelResetButton" class="secondary-button" type="button">Go Back</button>
+                <button id="confirmResetButton" class="record-button danger-button" type="button">Reset Everything</button>
             </div>
         </section>
     </div>

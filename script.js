@@ -217,6 +217,10 @@ const importSummary = document.querySelector("#importSummary");
 const cancelImportButton = document.querySelector("#cancelImportButton");
 const confirmImportButton = document.querySelector("#confirmImportButton");
 const soundToggleButton = document.querySelector("#soundToggleButton");
+const resetSaveButton = document.querySelector("#resetSaveButton");
+const resetOverlay = document.querySelector("#resetOverlay");
+const cancelResetButton = document.querySelector("#cancelResetButton");
+const confirmResetButton = document.querySelector("#confirmResetButton");
 
 // Fields
 const fields = {
@@ -786,6 +790,48 @@ confirmImportButton.addEventListener("click", function () {
 });
 
 // =========================
+// Reset save
+// =========================
+resetSaveButton.addEventListener("click", function () {
+    playSound("confirm");
+    resetOverlay.classList.remove("hidden");
+    resetOverlay.setAttribute("aria-hidden", "false");
+});
+
+function closeResetOverlay() {
+    resetOverlay.classList.add("hidden");
+    resetOverlay.setAttribute("aria-hidden", "true");
+}
+
+cancelResetButton.addEventListener("click", closeResetOverlay);
+
+resetOverlay.addEventListener("click", function (event) {
+    if (event.target === resetOverlay) closeResetOverlay();
+});
+
+confirmResetButton.addEventListener("click", function () {
+    localStorage.removeItem(STORAGE_KEY);
+    playerData = cloneDefaultData();
+
+    mlQuestionCounter = 0;
+    lifeJoyCounter = 0;
+
+    resetForm("ml");
+    resetForm("research");
+    resetForm("english");
+    resetForm("life");
+
+    savePlayerData();
+    syncDateInputs();
+    renderExperience();
+    updateAllPreviews();
+    closeResetOverlay();
+
+    playSound("xp");
+    showToast("The garden is ready for a new beginning.", 0);
+});
+
+// =========================
 // Sound controls
 // =========================
 function updateSoundToggle() {
@@ -817,7 +863,9 @@ const specialSoundButtonIds = new Set([
     "confirmEntryButton",
     "exportSaveButton",
     "importSaveButton",
-    "confirmImportButton"
+    "confirmImportButton",
+    "resetSaveButton",
+    "confirmResetButton"
 ]);
 
 document.addEventListener("click", function (event) {
