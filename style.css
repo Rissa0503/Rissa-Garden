@@ -700,3 +700,57 @@ button {
         -webkit-overflow-scrolling: touch;
     }
 }
+
+
+/* =========================
+   v0.5.2 — full-bleed iPhone wallpaper
+   ========================= */
+html {
+    background-color: #dceac9;
+    background-image:
+        linear-gradient(
+            rgba(255, 250, 230, .03),
+            rgba(255, 250, 230, .03)
+        ),
+        url("assets/garden.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+body {
+    isolation: isolate;
+    background: transparent !important;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+
+    background-image:
+        linear-gradient(
+            rgba(255, 250, 230, .03),
+            rgba(255, 250, 230, .03)
+        ),
+        url("assets/garden.png");
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+}
+
+@supports (height: 100dvh) {
+    html,
+    body,
+    body::before {
+        width: 100%;
+        height: 100dvh;
+        min-height: 100dvh;
+    }
+}
