@@ -215,6 +215,7 @@ const pages = {
     englishDetail: document.querySelector("#englishDetailPage"),
     lifeDetail: document.querySelector("#lifeDetailPage"),
     purseDetail: document.querySelector("#purseDetailPage"),
+    expenseBreakdown: document.querySelector("#expenseBreakdownPage"),
     mode: document.querySelector("#modePage"),
     mlMode: document.querySelector("#mlModePage"),
     researchMode: document.querySelector("#researchModePage"),
@@ -229,6 +230,8 @@ const modeButton = document.querySelector("#modeButton");
 const backToStartButton = document.querySelector("#backToStartButton");
 const backToHomeFromExperience = document.querySelector("#backToHomeFromExperience");
 const backToHomeFromMode = document.querySelector("#backToHomeFromMode");
+const purseExpenseCard = document.querySelector("#purseExpenseCard");
+const backToPurseFromExpense = document.querySelector("#backToPurseFromExpense");
 
 const skillCards = {
     ml: document.querySelector("#mlSkillCard"),
@@ -347,6 +350,16 @@ skillCards.research.addEventListener("click", () => openDetail("research"));
 skillCards.english.addEventListener("click", () => openDetail("english"));
 skillCards.life.addEventListener("click", () => openDetail("life"));
 skillCards.purse.addEventListener("click", () => openDetail("purse"));
+
+purseExpenseCard.addEventListener("click", function () {
+    renderExperience();
+    switchPage(pages.purseDetail, pages.expenseBreakdown);
+});
+
+backToPurseFromExpense.addEventListener("click", function () {
+    renderExperience();
+    switchPage(pages.expenseBreakdown, pages.purseDetail);
+});
 
 function openDetail(type) {
     renderExperience();
@@ -479,6 +492,17 @@ function renderExperience() {
 
     document.querySelector("#purseIncome").textContent = formatAUD(playerData.purse.income);
     document.querySelector("#purseExpense").textContent = formatAUD(playerData.purse.expense);
+
+    document.querySelector("#expenseBreakdownTotal").textContent =
+        `${formatAUD(playerData.purse.expense)} total`;
+    document.querySelector("#expenseTransportTotal").textContent =
+        formatAUD(playerData.purse.transport);
+    document.querySelector("#expenseFoodTotal").textContent =
+        formatAUD(playerData.purse.food);
+    document.querySelector("#expenseHousingTotal").textContent =
+        formatAUD(playerData.purse.housing);
+    document.querySelector("#expenseOtherTotal").textContent =
+        formatAUD(playerData.purse.other);
 }
 
 // =========================

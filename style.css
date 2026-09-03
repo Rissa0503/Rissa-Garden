@@ -538,6 +538,52 @@ button:focus-visible, input:focus-visible { outline: 3px solid rgba(153,174,104,
 
 
 
+
+/* =========================
+   v0.6.1 — Expense breakdown
+   ========================= */
+.money-detail-button {
+    width: 100%;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+    border: 1px solid rgba(113,111,76,.30);
+    transition: transform .18s ease, background-color .18s ease, box-shadow .18s ease;
+}
+
+.money-detail-button:hover {
+    transform: translateY(-3px);
+    background: rgba(255,255,246,.96);
+    box-shadow: 0 10px 20px rgba(68,58,32,.10);
+}
+
+.money-detail-button:active {
+    transform: translateY(1px);
+}
+
+.money-detail-button small {
+    color: #8a805e;
+}
+
+.expense-breakdown-panel {
+    width: min(680px, 92vw);
+}
+
+.expense-category-box strong {
+    font-size: clamp(28px, 4vw, 42px);
+    letter-spacing: -1px;
+}
+
+@media (max-width: 720px) {
+    .expense-category-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .expense-category-box {
+        min-height: 118px;
+    }
+}
+
 /* =========================
    v0.6.0 — Purse
    ========================= */

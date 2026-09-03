@@ -223,9 +223,48 @@
                     <strong id="purseIncome">A$0.00</strong>
                     <small>AUD</small>
                 </article>
-                <article class="metric-box money-metric-box">
+                <button id="purseExpenseCard" class="metric-box money-metric-box money-detail-button" type="button">
                     <span>Total Expense</span>
                     <strong id="purseExpense">A$0.00</strong>
+                    <small>View breakdown →</small>
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Expense Breakdown -->
+    <main id="expenseBreakdownPage" class="page detail-page hidden">
+        <button id="backToPurseFromExpense" class="back-button" type="button" aria-label="Back to purse detail">←</button>
+
+        <section class="detail-panel expense-breakdown-panel">
+            <header class="detail-header">
+                <p class="panel-label">Expense Breakdown</p>
+                <h2>💸 Expenses</h2>
+                <strong id="expenseBreakdownTotal" class="detail-level">A$0.00 total</strong>
+            </header>
+
+            <div class="metric-grid two-columns expense-category-grid">
+                <article class="metric-box expense-category-box">
+                    <span>Transport</span>
+                    <strong id="expenseTransportTotal">A$0.00</strong>
+                    <small>AUD</small>
+                </article>
+
+                <article class="metric-box expense-category-box">
+                    <span>Food</span>
+                    <strong id="expenseFoodTotal">A$0.00</strong>
+                    <small>AUD</small>
+                </article>
+
+                <article class="metric-box expense-category-box">
+                    <span>Housing</span>
+                    <strong id="expenseHousingTotal">A$0.00</strong>
+                    <small>AUD</small>
+                </article>
+
+                <article class="metric-box expense-category-box">
+                    <span>Other</span>
+                    <strong id="expenseOtherTotal">A$0.00</strong>
                     <small>AUD</small>
                 </article>
             </div>

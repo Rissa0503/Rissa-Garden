@@ -14,7 +14,7 @@ A personal growth garden for ML, research, English, and life.
 The website will normally be available at:
 
 ```text
-https://rissa0503.github.io/Rissa-Garden/
+https://YOUR-USERNAME.github.io/rissas-garden/
 ```
 
 All project paths are relative, so the PWA works as a GitHub project site.
@@ -184,3 +184,22 @@ ML, Research, English, Life, and Purse.
 Save schema version: 3.
 Older v0.5.x JSON saves remain importable; Purse starts at zero when absent.
 Service worker cache: `rissa-garden-pwa-v0.6.0`.
+
+
+## v0.6.1 — Expense Breakdown
+
+Purse → Total Expense is now clickable.
+
+The nested Expense Breakdown page shows cumulative AUD totals for:
+- Transport
+- Food
+- Housing
+- Other
+
+No save-schema change is required. These category totals were already stored
+in the v0.6.0 Purse data model, so existing Purse entries appear immediately.
+
+Navigation:
+Experience → Purse → Total Expense → Expense Breakdown
+
+Service worker cache: `rissa-garden-pwa-v0.6.1`.
