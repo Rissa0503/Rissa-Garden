@@ -14,7 +14,7 @@ A personal growth garden for ML, research, English, and life.
 The website will normally be available at:
 
 ```text
-https://Rissa0503.github.io/rissas-garden/
+https://rissa0503.github.io/Rissa-Garden/
 ```
 
 All project paths are relative, so the PWA works as a GitHub project site.
