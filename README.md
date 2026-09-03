@@ -80,3 +80,107 @@ After uploading the new files to GitHub Pages:
 1. wait for deployment,
 2. open the website once in Safari,
 3. if the old background still appears, remove the Home Screen app and add it again.
+
+
+## v0.5.4 update
+
+The portrait image was not too short. The gap came from an iOS viewport
+sizing conflict:
+
+- `position: fixed; inset: 0`
+- combined with an explicit `height: 100dvh`
+
+In standalone iPhone PWAs, that explicit height can stop before the
+bottom Home Indicator safe area. v0.5.4 removes the explicit fixed
+height and lets `top: 0` plus `bottom: 0` stretch the wallpaper and each
+page across the complete viewport.
+
+The service-worker cache is now `rissa-garden-pwa-v0.5.4`.
+
+
+## v0.5.5 update
+
+This version replaces the accumulated mobile/PWA override blocks with
+one consolidated layout.
+
+The bottom strip was the iPhone Home Indicator safe area. The new
+`.app-background` is a real fixed element and extends beyond the
+ordinary viewport by each `env(safe-area-inset-*)` value. The portrait
+artwork therefore continues behind the bottom system area instead of
+ending at its upper boundary.
+
+Cache version: `rissa-garden-pwa-v0.5.5`.
+
+
+## v0.5.6 update
+
+- Restores full-height internal panels by removing the double subtraction
+  of page padding and safe-area values.
+- Uses one stable mobile layout block.
+- Stops attempting to position DOM content outside WebKit's standalone
+  viewport.
+- Fades the bottom of `garden-mobile.png` into `#76603d`, the same color
+  used by the iOS PWA system-area fallback.
+- Cache version: `rissa-garden-pwa-v0.5.6`.
+
+
+## v0.6.0 — Rissa's Purse
+
+A fifth domain, **Purse**, is now integrated into both Experience and Mode.
+
+### Experience
+- Purse Level + XP bar
+- Total Income (AUD)
+- Total Expense (AUD)
+
+### Mode → Purse
+Income:
+- Income (AUD)
+
+Expenses:
+- Transport (AUD)
+- Food (AUD)
+- Housing (AUD)
+- Other (AUD)
+- Optional Other note, e.g. medical, beauty, gifts
+
+Every confirmed Purse entry stores:
+- chosen record date
+- real submission timestamp
+- raw income/expense categories
+- optional note
+- total expense
+- Purse XP gained
+
+### Date behavior
+No internet request is required. The PWA reads the device's local clock.
+Each fresh app launch defaults to today's local date. A manual date choice
+still works for back-filling old entries.
+
+### Purse XP
+Expenses earn **0 XP**.
+
+Income uses a deliberately high-weight but diminishing cumulative curve:
+
+`F(total income in AUD) = round(30 × sqrt(total income))`
+
+For each new income entry, XP gained is:
+
+`F(income after entry) - F(income before entry)`
+
+Examples from a zero-income starting point:
+- A$25 cumulative income → 150 XP
+- A$100 → 300 XP
+- A$500 → about 671 XP
+- A$1,000 → about 949 XP
+- A$5,000 → about 2,121 XP
+
+Because XP is awarded as a difference on the cumulative curve, splitting one
+income payment into several entries does not increase the total XP.
+
+Overall Level now gives equal weight to five domains:
+ML, Research, English, Life, and Purse.
+
+Save schema version: 3.
+Older v0.5.x JSON saves remain importable; Purse starts at zero when absent.
+Service worker cache: `rissa-garden-pwa-v0.6.0`.

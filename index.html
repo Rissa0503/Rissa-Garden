@@ -111,6 +111,12 @@
                     <div class="xp-track"><div id="lifeXPFill" class="xp-fill" style="width: 0%;"></div></div>
                     <p id="lifeXPText" class="xp-text">0 / 100 XP</p>
                 </button>
+
+                <button id="purseSkillCard" class="skill-card clickable-card" type="button">
+                    <div class="skill-heading"><span>👛 Purse</span><strong id="purseLevel">Lv. 1</strong></div>
+                    <div class="xp-track"><div id="purseXPFill" class="xp-fill" style="width: 0%;"></div></div>
+                    <p id="purseXPText" class="xp-text">0 / 100 XP</p>
+                </button>
             </div>
         </section>
     </main>
@@ -196,6 +202,36 @@
         </section>
     </main>
 
+    <!-- Purse Detail -->
+    <main id="purseDetailPage" class="page detail-page hidden">
+        <button class="back-button detail-back-button" type="button" aria-label="Back to experience page">←</button>
+        <section class="detail-panel">
+            <header class="detail-header">
+                <p class="panel-label">Money Record</p>
+                <h2>👛 Purse</h2>
+                <strong id="purseDetailLevel" class="detail-level">Lv. 1</strong>
+            </header>
+
+            <div class="detail-xp-block">
+                <div class="xp-track"><div id="purseDetailXPFill" class="xp-fill" style="width: 0%;"></div></div>
+                <p id="purseDetailXPText" class="xp-text">0 / 100 XP</p>
+            </div>
+
+            <div class="metric-grid two-columns purse-metric-grid">
+                <article class="metric-box money-metric-box">
+                    <span>Total Income</span>
+                    <strong id="purseIncome">A$0.00</strong>
+                    <small>AUD</small>
+                </article>
+                <article class="metric-box money-metric-box">
+                    <span>Total Expense</span>
+                    <strong id="purseExpense">A$0.00</strong>
+                    <small>AUD</small>
+                </article>
+            </div>
+        </section>
+    </main>
+
     <!-- Mode Menu -->
     <main id="modePage" class="page mode-page hidden">
         <button id="backToHomeFromMode" class="back-button" type="button" aria-label="Back to home page">←</button>
@@ -232,6 +268,11 @@
                     <span class="mode-icon">🌼</span>
                     <strong>Life</strong>
                     <small>Make it worth remembering.</small>
+                </button>
+                <button id="purseModeCard" class="mode-card purse-mode-card" type="button">
+                    <span class="mode-icon">👛</span>
+                    <strong>Purse</strong>
+                    <small>Know where it goes.</small>
                 </button>
             </div>
         </section>
@@ -372,6 +413,112 @@
 
             <div class="xp-preview"><span>Estimated XP</span><strong id="lifeXPPreview">0 XP</strong></div>
             <button id="reviewLifeButton" class="record-button" type="button">Review Entry</button>
+        </section>
+    </main>
+
+    <!-- Purse Mode -->
+    <main id="purseModePage" class="page mode-detail-page hidden">
+        <button class="back-button mode-detail-back-button" type="button" aria-label="Back to mode page">←</button>
+
+        <div class="date-control floating-date-control">
+            <label for="purseModeDate">Record Date</label>
+            <input id="purseModeDate" class="shared-date-input" type="date">
+        </div>
+
+        <section class="entry-panel purse-entry-panel">
+            <header class="entry-header">
+                <p class="panel-label">Mind the Money</p>
+                <h2>👛 Purse</h2>
+                <p>Keep an eye on the little things.</p>
+            </header>
+
+            <section class="money-section">
+                <div class="money-section-heading">
+                    <div>
+                        <p class="panel-label">Income</p>
+                        <h3>Money In</h3>
+                    </div>
+                    <small>Income earns Purse XP.</small>
+                </div>
+
+                <div class="entry-form one-entry-column money-single-field">
+                    <label class="input-group money-input-group">
+                        <span>Income</span>
+                        <div class="input-with-unit">
+                            <input id="purseIncomeField" type="number" min="0" step="0.01" inputmode="decimal" value="0">
+                            <small>AUD</small>
+                        </div>
+                    </label>
+                </div>
+            </section>
+
+            <section class="money-section">
+                <div class="money-section-heading">
+                    <div>
+                        <p class="panel-label">Expenses</p>
+                        <h3>Money Out</h3>
+                    </div>
+                    <small>Expenses are recorded, not rewarded.</small>
+                </div>
+
+                <div class="purse-expense-grid">
+                    <label class="input-group money-input-group">
+                        <span>Transport</span>
+                        <div class="input-with-unit">
+                            <input id="purseTransportField" type="number" min="0" step="0.01" inputmode="decimal" value="0">
+                            <small>AUD</small>
+                        </div>
+                    </label>
+
+                    <label class="input-group money-input-group">
+                        <span>Food</span>
+                        <div class="input-with-unit">
+                            <input id="purseFoodField" type="number" min="0" step="0.01" inputmode="decimal" value="0">
+                            <small>AUD</small>
+                        </div>
+                    </label>
+
+                    <label class="input-group money-input-group">
+                        <span>Housing</span>
+                        <div class="input-with-unit">
+                            <input id="purseHousingField" type="number" min="0" step="0.01" inputmode="decimal" value="0">
+                            <small>AUD</small>
+                        </div>
+                    </label>
+
+                    <label class="input-group money-input-group">
+                        <span>Other</span>
+                        <div class="input-with-unit">
+                            <input id="purseOtherField" type="number" min="0" step="0.01" inputmode="decimal" value="0">
+                            <small>AUD</small>
+                        </div>
+                    </label>
+                </div>
+
+                <label class="money-note-group">
+                    <span>Other note <small>optional</small></span>
+                    <input
+                        id="purseOtherNoteField"
+                        class="money-note-input"
+                        type="text"
+                        maxlength="120"
+                        placeholder="Medical, beauty, gifts..."
+                    >
+                </label>
+            </section>
+
+            <div class="purse-preview-row">
+                <div class="xp-preview purse-xp-preview">
+                    <span>Income XP</span>
+                    <strong id="purseXPPreview">0 XP</strong>
+                </div>
+                <div class="expense-preview">
+                    <span>This entry's expenses</span>
+                    <strong id="purseExpensePreview">A$0.00</strong>
+                </div>
+            </div>
+
+            <button id="reviewPurseButton" class="record-button" type="button">Review Entry</button>
         </section>
     </main>
 

@@ -536,6 +536,171 @@ button:focus-visible, input:focus-visible { outline: 3px solid rgba(153,174,104,
     background: #f0dfcf;
 }
 
+
+
+/* =========================
+   v0.6.0 — Purse
+   ========================= */
+.purse-mode-card {
+    grid-column: 1 / -1;
+}
+
+.purse-metric-grid .metric-box strong {
+    font-size: clamp(30px, 4vw, 46px);
+}
+
+.money-metric-box strong {
+    letter-spacing: -1px;
+}
+
+.purse-entry-panel {
+    width: min(780px, 92vw);
+}
+
+.money-section {
+    margin-top: 18px;
+    padding: 18px;
+    border: 1px solid rgba(113,111,76,.26);
+    border-radius: 24px;
+    background: rgba(255,255,246,.55);
+}
+
+.money-section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 18px;
+    margin-bottom: 14px;
+}
+
+.money-section-heading .panel-label {
+    text-align: left;
+    margin-bottom: 2px;
+}
+
+.money-section-heading h3 {
+    margin: 0;
+    color: #514629;
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.money-section-heading > small {
+    color: #8a805e;
+    text-align: right;
+    line-height: 1.4;
+}
+
+.money-single-field {
+    margin-top: 0;
+}
+
+.money-single-field .money-input-group {
+    min-height: 125px;
+}
+
+.purse-expense-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.money-input-group {
+    min-height: 125px;
+}
+
+.money-note-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 14px;
+    color: #71674c;
+    font-size: 15px;
+}
+
+.money-note-group > span {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+}
+
+.money-note-group small {
+    color: #9a9070;
+}
+
+.money-note-input {
+    width: 100%;
+    min-width: 0;
+    padding: 12px 14px;
+    border: 1px solid rgba(104,103,69,.34);
+    border-radius: 14px;
+    background: rgba(255,253,241,.94);
+    color: #514629;
+}
+
+.money-note-input::placeholder {
+    color: #a99f82;
+}
+
+.purse-preview-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 20px 0 16px;
+}
+
+.purse-xp-preview {
+    margin: 0;
+}
+
+.expense-preview {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 18px;
+    border-radius: 18px;
+    background: rgba(255,246,235,.76);
+    color: #7e705c;
+}
+
+.expense-preview strong {
+    color: #5f5142;
+    font-size: 20px;
+}
+
+@media (max-width: 720px) {
+    .purse-mode-card {
+        grid-column: auto;
+    }
+
+    .purse-expense-grid,
+    .purse-preview-row {
+        grid-template-columns: 1fr;
+    }
+
+    .money-section {
+        padding: 15px;
+    }
+
+    .money-section-heading {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .money-section-heading > small {
+        text-align: left;
+    }
+
+    .money-input-group {
+        min-height: 112px;
+    }
+
+    .purse-entry-panel {
+        width: min(100%, 780px);
+    }
+}
+
 /* =========================
    v0.5.6 — stable iPhone PWA layout
    ========================= */

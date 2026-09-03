@@ -10,12 +10,21 @@ function getTodayDate() {
 }
 
 const defaultPlayerData = {
-    version: 2,
+    version: 3,
     selectedDate: getTodayDate(),
     ml: { xp: 0, inputMinutes: 0, noteWords: 0, questions: 0 },
     research: { xp: 0, readingMinutes: 0, outputWords: 0 },
     english: { xp: 0, sentences: 0 },
     life: { xp: 0, artMinutes: 0, exerciseMinutes: 0, happyEvents: 0 },
+    purse: {
+        xp: 0,
+        income: 0,
+        expense: 0,
+        transport: 0,
+        food: 0,
+        housing: 0,
+        other: 0
+    },
     logs: []
 };
 
@@ -32,12 +41,17 @@ function loadPlayerData() {
         return {
             ...cloneDefaultData(),
             ...parsedData,
-            version: 2,
-            selectedDate: parsedData.selectedDate || getTodayDate(),
+            version: 3,
+
+            // Every fresh app launch starts on the device's current local date.
+            // Manual back-filling is still available through the date picker.
+            selectedDate: getTodayDate(),
+
             ml: { ...defaultPlayerData.ml, ...(parsedData.ml || {}) },
             research: { ...defaultPlayerData.research, ...(parsedData.research || {}) },
             english: { ...defaultPlayerData.english, ...(parsedData.english || {}) },
             life: { ...defaultPlayerData.life, ...(parsedData.life || {}) },
+            purse: { ...defaultPlayerData.purse, ...(parsedData.purse || {}) },
             logs: Array.isArray(parsedData.logs) ? parsedData.logs : []
         };
     } catch (error) {
@@ -119,11 +133,40 @@ const XP_RULES = {
         artMinute: 0.15,
         exerciseMinute: 0.2,
         happyEvent: 20
+    },
+
+    // Purse XP uses a separate cumulative-income curve.
+    // F(total income in AUD) = 30 * sqrt(total income).
+    // Each income entry earns only the increase F(after) - F(before).
+    // This makes income strongly rewarding while naturally slowing at scale.
+    purse: {
+        incomeCurveScale: 30
     }
 };
 
 function roundXP(value) {
     return Math.round(Math.max(0, value));
+}
+
+function roundMoney(value) {
+    return Math.round((Math.max(0, Number(value) || 0) + Number.EPSILON) * 100) / 100;
+}
+
+function calculatePurseCurveXP(totalIncomeAUD) {
+    const income = Math.max(0, Number(totalIncomeAUD) || 0);
+    return roundXP(XP_RULES.purse.incomeCurveScale * Math.sqrt(income));
+}
+
+function calculatePurseIncomeXPGain(incomeAUD) {
+    const income = roundMoney(incomeAUD);
+    if (income <= 0) return 0;
+
+    const before = calculatePurseCurveXP(playerData.purse.income);
+    const after = calculatePurseCurveXP(
+        roundMoney(playerData.purse.income + income)
+    );
+
+    return Math.max(0, after - before);
 }
 
 function getRequiredXP(level) {
@@ -153,8 +196,9 @@ function calculateOverallLevel() {
         playerData.ml.xp +
         playerData.research.xp +
         playerData.english.xp +
-        playerData.life.xp
-    ) / 4;
+        playerData.life.xp +
+        playerData.purse.xp
+    ) / 5;
 
     return calculateLevel(overallXP);
 }
@@ -170,11 +214,13 @@ const pages = {
     researchDetail: document.querySelector("#researchDetailPage"),
     englishDetail: document.querySelector("#englishDetailPage"),
     lifeDetail: document.querySelector("#lifeDetailPage"),
+    purseDetail: document.querySelector("#purseDetailPage"),
     mode: document.querySelector("#modePage"),
     mlMode: document.querySelector("#mlModePage"),
     researchMode: document.querySelector("#researchModePage"),
     englishMode: document.querySelector("#englishModePage"),
-    lifeMode: document.querySelector("#lifeModePage")
+    lifeMode: document.querySelector("#lifeModePage"),
+    purseMode: document.querySelector("#purseModePage")
 };
 
 const startButton = document.querySelector("#startButton");
@@ -188,14 +234,16 @@ const skillCards = {
     ml: document.querySelector("#mlSkillCard"),
     research: document.querySelector("#researchSkillCard"),
     english: document.querySelector("#englishSkillCard"),
-    life: document.querySelector("#lifeSkillCard")
+    life: document.querySelector("#lifeSkillCard"),
+    purse: document.querySelector("#purseSkillCard")
 };
 
 const modeCards = {
     ml: document.querySelector("#mlModeCard"),
     research: document.querySelector("#researchModeCard"),
     english: document.querySelector("#englishModeCard"),
-    life: document.querySelector("#lifeModeCard")
+    life: document.querySelector("#lifeModeCard"),
+    purse: document.querySelector("#purseModeCard")
 };
 
 const detailBackButtons = document.querySelectorAll(".detail-back-button");
@@ -232,14 +280,22 @@ const fields = {
     englishSentences: document.querySelector("#englishSentencesField"),
     lifeArtMinutes: document.querySelector("#lifeArtMinutesField"),
     lifeExerciseMinutes: document.querySelector("#lifeExerciseMinutesField"),
-    lifeJoyCount: document.querySelector("#lifeJoyCount")
+    lifeJoyCount: document.querySelector("#lifeJoyCount"),
+    purseIncome: document.querySelector("#purseIncomeField"),
+    purseTransport: document.querySelector("#purseTransportField"),
+    purseFood: document.querySelector("#purseFoodField"),
+    purseHousing: document.querySelector("#purseHousingField"),
+    purseOther: document.querySelector("#purseOtherField"),
+    purseOtherNote: document.querySelector("#purseOtherNoteField")
 };
 
 const previews = {
     ml: document.querySelector("#mlXPPreview"),
     research: document.querySelector("#researchXPPreview"),
     english: document.querySelector("#englishXPPreview"),
-    life: document.querySelector("#lifeXPPreview")
+    life: document.querySelector("#lifeXPPreview"),
+    purse: document.querySelector("#purseXPPreview"),
+    purseExpense: document.querySelector("#purseExpensePreview")
 };
 
 let mlQuestionCounter = 0;
@@ -247,6 +303,7 @@ let lifeJoyCounter = 0;
 let pendingEntry = null;
 let pendingImportedData = null;
 let toastTimer = null;
+let dateWasManuallyChanged = false;
 
 // =========================
 // Navigation
@@ -276,6 +333,7 @@ experienceButton.addEventListener("click", function () {
 });
 
 modeButton.addEventListener("click", function () {
+    refreshAutomaticDate();
     syncDateInputs();
     switchPage(pages.home, pages.mode);
 });
@@ -288,6 +346,7 @@ skillCards.ml.addEventListener("click", () => openDetail("ml"));
 skillCards.research.addEventListener("click", () => openDetail("research"));
 skillCards.english.addEventListener("click", () => openDetail("english"));
 skillCards.life.addEventListener("click", () => openDetail("life"));
+skillCards.purse.addEventListener("click", () => openDetail("purse"));
 
 function openDetail(type) {
     renderExperience();
@@ -306,8 +365,10 @@ modeCards.ml.addEventListener("click", () => openModeDetail("ml"));
 modeCards.research.addEventListener("click", () => openModeDetail("research"));
 modeCards.english.addEventListener("click", () => openModeDetail("english"));
 modeCards.life.addEventListener("click", () => openModeDetail("life"));
+modeCards.purse.addEventListener("click", () => openModeDetail("purse"));
 
 function openModeDetail(type) {
+    refreshAutomaticDate();
     syncDateInputs();
     updateAllPreviews();
     switchPage(pages.mode, pages[`${type}Mode`]);
@@ -329,12 +390,34 @@ function syncDateInputs() {
     });
 }
 
+function refreshAutomaticDate() {
+    if (dateWasManuallyChanged) return;
+
+    const today = getTodayDate();
+
+    if (playerData.selectedDate !== today) {
+        playerData.selectedDate = today;
+        savePlayerData();
+        syncDateInputs();
+    }
+}
+
 dateInputs.forEach(function (input) {
     input.addEventListener("change", function () {
+        dateWasManuallyChanged = true;
         playerData.selectedDate = input.value || getTodayDate();
         savePlayerData();
         syncDateInputs();
     });
+});
+
+// No network request is needed: the PWA follows the device's local clock.
+// If the app returns to the foreground on a new day, refresh automatically
+// unless the user deliberately chose another date during this session.
+document.addEventListener("visibilitychange", function () {
+    if (!document.hidden) {
+        refreshAutomaticDate();
+    }
 });
 
 // =========================
@@ -351,23 +434,35 @@ function formatNumber(value) {
     return new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 }).format(value);
 }
 
+function formatAUD(value) {
+    return new Intl.NumberFormat("en-AU", {
+        style: "currency",
+        currency: "AUD",
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }).format(roundMoney(value));
+}
+
 function renderExperience() {
     const overall = calculateOverallLevel();
     const ml = calculateLevel(playerData.ml.xp);
     const research = calculateLevel(playerData.research.xp);
     const english = calculateLevel(playerData.english.xp);
     const life = calculateLevel(playerData.life.xp);
+    const purse = calculateLevel(playerData.purse.xp);
 
     setLevelUI("overall", overall);
     setLevelUI("ml", ml);
     setLevelUI("research", research);
     setLevelUI("english", english);
     setLevelUI("life", life);
+    setLevelUI("purse", purse);
 
     setLevelUI("mlDetail", ml);
     setLevelUI("researchDetail", research);
     setLevelUI("englishDetail", english);
     setLevelUI("lifeDetail", life);
+    setLevelUI("purseDetail", purse);
 
     document.querySelector("#mlInputMinutes").textContent = formatNumber(playerData.ml.inputMinutes);
     document.querySelector("#mlNoteWords").textContent = formatNumber(playerData.ml.noteWords);
@@ -381,6 +476,9 @@ function renderExperience() {
     document.querySelector("#lifeArtMinutes").textContent = formatNumber(playerData.life.artMinutes);
     document.querySelector("#lifeExerciseMinutes").textContent = formatNumber(playerData.life.exerciseMinutes);
     document.querySelector("#lifeHappyEvents").textContent = formatNumber(playerData.life.happyEvents);
+
+    document.querySelector("#purseIncome").textContent = formatAUD(playerData.purse.income);
+    document.querySelector("#purseExpense").textContent = formatAUD(playerData.purse.expense);
 }
 
 // =========================
@@ -431,11 +529,43 @@ function calculateLifeDraft() {
     return { mode: "life", artMinutes, exerciseMinutes, happyEvents, xp };
 }
 
+function calculatePurseDraft() {
+    const income = roundMoney(readNonNegative(fields.purseIncome));
+    const transport = roundMoney(readNonNegative(fields.purseTransport));
+    const food = roundMoney(readNonNegative(fields.purseFood));
+    const housing = roundMoney(readNonNegative(fields.purseHousing));
+    const other = roundMoney(readNonNegative(fields.purseOther));
+    const otherNote = fields.purseOtherNote.value.trim().slice(0, 120);
+
+    const expenseTotal = roundMoney(
+        transport + food + housing + other
+    );
+
+    const xp = calculatePurseIncomeXPGain(income);
+
+    return {
+        mode: "purse",
+        income,
+        transport,
+        food,
+        housing,
+        other,
+        otherNote,
+        expenseTotal,
+        xp,
+        xpRuleVersion: 1
+    };
+}
+
 function updateAllPreviews() {
     previews.ml.textContent = `${calculateMLDraft().xp} XP`;
     previews.research.textContent = `${calculateResearchDraft().xp} XP`;
     previews.english.textContent = `${calculateEnglishDraft().xp} XP`;
     previews.life.textContent = `${calculateLifeDraft().xp} XP`;
+
+    const purseDraft = calculatePurseDraft();
+    previews.purse.textContent = `${purseDraft.xp} XP`;
+    previews.purseExpense.textContent = formatAUD(purseDraft.expenseTotal);
 }
 
 [
@@ -445,7 +575,12 @@ function updateAllPreviews() {
     fields.researchOutputWords,
     fields.englishSentences,
     fields.lifeArtMinutes,
-    fields.lifeExerciseMinutes
+    fields.lifeExerciseMinutes,
+    fields.purseIncome,
+    fields.purseTransport,
+    fields.purseFood,
+    fields.purseHousing,
+    fields.purseOther
 ].forEach(function (input) {
     input.addEventListener("input", updateAllPreviews);
 });
@@ -478,12 +613,14 @@ document.querySelector("#reviewMLButton").addEventListener("click", () => review
 document.querySelector("#reviewResearchButton").addEventListener("click", () => reviewEntry(calculateResearchDraft()));
 document.querySelector("#reviewEnglishButton").addEventListener("click", () => reviewEntry(calculateEnglishDraft()));
 document.querySelector("#reviewLifeButton").addEventListener("click", () => reviewEntry(calculateLifeDraft()));
+document.querySelector("#reviewPurseButton").addEventListener("click", () => reviewEntry(calculatePurseDraft()));
 
 function hasContent(entry) {
     if (entry.mode === "ml") return entry.inputMinutes > 0 || entry.noteWords > 0 || entry.questions > 0;
     if (entry.mode === "research") return entry.readingMinutes > 0 || entry.outputWords > 0;
     if (entry.mode === "english") return entry.sentences > 0;
     if (entry.mode === "life") return entry.artMinutes > 0 || entry.exerciseMinutes > 0 || entry.happyEvents > 0;
+    if (entry.mode === "purse") return entry.income > 0 || entry.expenseTotal > 0;
     return false;
 }
 
@@ -523,9 +660,20 @@ function buildSummaryHTML(entry) {
         rows.push(["Drawing", `${entry.artMinutes} min`]);
         rows.push(["Exercise", `${entry.exerciseMinutes} min`]);
         rows.push(["Small Joys", `${entry.happyEvents}`]);
+    } else if (entry.mode === "purse") {
+        if (entry.income > 0) rows.push(["Income", formatAUD(entry.income)]);
+        if (entry.transport > 0) rows.push(["Transport", formatAUD(entry.transport)]);
+        if (entry.food > 0) rows.push(["Food", formatAUD(entry.food)]);
+        if (entry.housing > 0) rows.push(["Housing", formatAUD(entry.housing)]);
+        if (entry.other > 0) rows.push(["Other", formatAUD(entry.other)]);
+        if (entry.otherNote) rows.push(["Other note", entry.otherNote]);
+        if (entry.expenseTotal > 0) rows.push(["Total Expense", formatAUD(entry.expenseTotal)]);
     }
 
-    rows.push(["XP Gained", `+${entry.xp} XP`]);
+    rows.push([
+        entry.mode === "purse" ? "Income XP" : "XP Gained",
+        `+${entry.xp} XP`
+    ]);
 
     return rows.map(function ([label, value]) {
         return `<div class="confirmation-row"><span>${label}</span><strong>${value}</strong></div>`;
@@ -600,6 +748,14 @@ function applyEntry(entry) {
         playerData.life.exerciseMinutes += entry.exerciseMinutes;
         playerData.life.happyEvents += entry.happyEvents;
         playerData.life.xp += entry.xp;
+    } else if (entry.mode === "purse") {
+        playerData.purse.income = roundMoney(playerData.purse.income + entry.income);
+        playerData.purse.transport = roundMoney(playerData.purse.transport + entry.transport);
+        playerData.purse.food = roundMoney(playerData.purse.food + entry.food);
+        playerData.purse.housing = roundMoney(playerData.purse.housing + entry.housing);
+        playerData.purse.other = roundMoney(playerData.purse.other + entry.other);
+        playerData.purse.expense = roundMoney(playerData.purse.expense + entry.expenseTotal);
+        playerData.purse.xp += entry.xp;
     }
 
     playerData.logs.push({
@@ -628,6 +784,13 @@ function resetForm(mode) {
         fields.lifeExerciseMinutes.value = 0;
         lifeJoyCounter = 0;
         fields.lifeJoyCount.textContent = 0;
+    } else if (mode === "purse") {
+        fields.purseIncome.value = 0;
+        fields.purseTransport.value = 0;
+        fields.purseFood.value = 0;
+        fields.purseHousing.value = 0;
+        fields.purseOther.value = 0;
+        fields.purseOtherNote.value = "";
     }
 
     updateAllPreviews();
@@ -689,12 +852,13 @@ function normalizeImportedData(rawData) {
     const normalized = {
         ...cloneDefaultData(),
         ...candidate,
-        version: 2,
-        selectedDate: candidate.selectedDate || getTodayDate(),
+        version: 3,
+        selectedDate: getTodayDate(),
         ml: { ...defaultPlayerData.ml, ...(candidate.ml || {}) },
         research: { ...defaultPlayerData.research, ...(candidate.research || {}) },
         english: { ...defaultPlayerData.english, ...(candidate.english || {}) },
         life: { ...defaultPlayerData.life, ...(candidate.life || {}) },
+        purse: { ...defaultPlayerData.purse, ...(candidate.purse || {}) },
         logs: Array.isArray(candidate.logs) ? candidate.logs : []
     };
 
@@ -702,13 +866,21 @@ function normalizeImportedData(rawData) {
         ["ml", "xp"], ["ml", "inputMinutes"], ["ml", "noteWords"], ["ml", "questions"],
         ["research", "xp"], ["research", "readingMinutes"], ["research", "outputWords"],
         ["english", "xp"], ["english", "sentences"],
-        ["life", "xp"], ["life", "artMinutes"], ["life", "exerciseMinutes"], ["life", "happyEvents"]
+        ["life", "xp"], ["life", "artMinutes"], ["life", "exerciseMinutes"], ["life", "happyEvents"],
+        ["purse", "xp"], ["purse", "income"], ["purse", "expense"],
+        ["purse", "transport"], ["purse", "food"], ["purse", "housing"], ["purse", "other"]
     ];
 
     numericFields.forEach(function ([section, field]) {
         const value = Number(normalized[section][field]);
         normalized[section][field] = Number.isFinite(value) && value >= 0 ? value : 0;
     });
+
+    ["income", "expense", "transport", "food", "housing", "other"].forEach(function (field) {
+        normalized.purse[field] = roundMoney(normalized.purse[field]);
+    });
+
+    normalized.purse.xp = roundXP(normalized.purse.xp);
 
     return normalized;
 }
@@ -718,7 +890,8 @@ function buildImportSummary(data, metadata) {
         data.ml.xp +
         data.research.xp +
         data.english.xp +
-        data.life.xp;
+        data.life.xp +
+        data.purse.xp;
 
     const exportedAt =
         metadata && metadata.exportedAt
@@ -730,7 +903,8 @@ function buildImportSummary(data, metadata) {
         ["Daily Logs", String(data.logs.length)],
         ["Combined XP", formatNumber(totalXP)],
         ["ML / Research", `${formatNumber(data.ml.xp)} / ${formatNumber(data.research.xp)} XP`],
-        ["English / Life", `${formatNumber(data.english.xp)} / ${formatNumber(data.life.xp)} XP`]
+        ["English / Life", `${formatNumber(data.english.xp)} / ${formatNumber(data.life.xp)} XP`],
+        ["Purse", `${formatNumber(data.purse.xp)} XP · ${formatAUD(data.purse.income)} in · ${formatAUD(data.purse.expense)} out`]
     ].map(function ([label, value]) {
         return `<div class="confirmation-row"><span>${label}</span><strong>${value}</strong></div>`;
     }).join("");
@@ -779,6 +953,7 @@ confirmImportButton.addEventListener("click", function () {
     if (!pendingImportedData) return;
 
     playerData = pendingImportedData;
+    dateWasManuallyChanged = false;
     savePlayerData();
     syncDateInputs();
     renderExperience();
@@ -812,6 +987,7 @@ resetOverlay.addEventListener("click", function (event) {
 confirmResetButton.addEventListener("click", function () {
     localStorage.removeItem(STORAGE_KEY);
     playerData = cloneDefaultData();
+    dateWasManuallyChanged = false;
 
     mlQuestionCounter = 0;
     lifeJoyCounter = 0;
@@ -820,6 +996,7 @@ confirmResetButton.addEventListener("click", function () {
     resetForm("research");
     resetForm("english");
     resetForm("life");
+    resetForm("purse");
 
     savePlayerData();
     syncDateInputs();
@@ -860,6 +1037,7 @@ const specialSoundButtonIds = new Set([
     "reviewResearchButton",
     "reviewEnglishButton",
     "reviewLifeButton",
+    "reviewPurseButton",
     "confirmEntryButton",
     "exportSaveButton",
     "importSaveButton",
@@ -882,6 +1060,7 @@ document.addEventListener("click", function (event) {
 });
 
 // Initial render
+refreshAutomaticDate();
 syncDateInputs();
 renderExperience();
 updateAllPreviews();

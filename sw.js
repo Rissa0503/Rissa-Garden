@@ -1,4 +1,4 @@
-const CACHE_NAME = "rissa-garden-pwa-v0.5.6";
+const CACHE_NAME = "rissa-garden-pwa-v0.6.0";
 
 const APP_SHELL = [
     "./",
